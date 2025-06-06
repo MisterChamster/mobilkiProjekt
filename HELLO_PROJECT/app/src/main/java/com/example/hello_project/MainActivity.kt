@@ -8,8 +8,8 @@ import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import android.view.Gravity
 import android.view.ViewGroup
-import android.content.Context
-import com.example.hello_project.R
+//import android.content.Context
+//import com.example.hello_project.R
 
 class MainActivity : AppCompatActivity() {
 
@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
 
         // Create button in code
         val button = Button(this).apply {
-            text = "Play Sound"
+            text = context.getString(R.string.play_s)
             layoutParams = LinearLayout.LayoutParams(
                 ViewGroup.LayoutParams.WRAP_CONTENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
@@ -56,7 +56,9 @@ class MainActivity : AppCompatActivity() {
         soundId = soundPool.load(this, R.raw.snare, 1)
 
         button.setOnClickListener {
+            println("BAHH")
             soundPool.play(soundId, 1f, 1f, 0, 0, 1f)
+            println("BAHH2")
         }
     }
 
