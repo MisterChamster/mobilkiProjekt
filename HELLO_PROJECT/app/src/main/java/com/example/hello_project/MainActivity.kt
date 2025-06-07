@@ -16,6 +16,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -45,31 +46,37 @@ class MainActivity : AppCompatActivity() {
         soundId = soundPool.load(this, R.raw.snare, 1)
 
         setContent {
-            MaterialTheme {
-                Column(modifier = Modifier.fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center
-                ) {
-                    Row {
-//                        OutlinedTextField(
-//                            state = rememberTextFieldState(),
-//                            label = { Text("Label") }
-//                        )
-                    }
-                    Row {
-                        SoundButton(onClick = {
-                            soundPool.play(soundId, 1f, 1f, 0, 3, 1f)
-                            println("BAHH")
-                        })
-                    }
-                }
-            }
+//            var text by remember { mutableStateOf("") }
+            mainUI(soundPool, soundId)
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         soundPool.release()
+    }
+}
+
+@Composable
+fun mainUI(soundPool: SoundPool, soundId: Int) {
+    MaterialTheme {
+        Column(modifier = Modifier.fillMaxSize(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Row {
+//                        OutlinedTextField(
+//                            state = rememberTextFieldState(),
+//                            label = { Text("Label") }
+//                        )
+            }
+            Row {
+                SoundButton(onClick = {
+                    soundPool.play(soundId, 1f, 1f, 0, 3, 1f)
+                    println("BAHH")
+                })
+            }
+        }
     }
 }
 
