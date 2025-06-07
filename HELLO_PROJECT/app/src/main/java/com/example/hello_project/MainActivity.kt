@@ -30,6 +30,8 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 
 
+val current_soundId_list = mutableListOf<Int>()
+
 class MainActivity : AppCompatActivity() {
 
     private lateinit var soundPool: SoundPool
@@ -87,7 +89,8 @@ fun MainUI(soundPool: SoundPool, soundId: Int) {
 
             Row {
                 StartSoundButton(onClick = {
-                    var a = soundPool.play(soundId, 1f, 1f, 0, 3, 1f)
+                    var a = soundPool.play(soundId, 1f, 1f, 0, -1, 1f)
+                    current_soundId_list.addLast(a)
                     println("BAHH")
                     println(a)
                     println("BWAHH")
@@ -95,7 +98,10 @@ fun MainUI(soundPool: SoundPool, soundId: Int) {
 //                Spacer(modifier = Modifier.height(10.dp))
 
                 StopSoundButton(onClick = {
-                    soundPool.stop(soundId)
+                    while(current_soundId_list.size > 0){
+                        soundPool.stop(current_soundId_list[0])
+                        current_soundId_list.removeFirst()
+                    }
                     println("BAHH2")
                 })
             }
