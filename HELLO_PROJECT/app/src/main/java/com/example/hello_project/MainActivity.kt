@@ -1,23 +1,23 @@
 package com.example.hello_project
 
-import android.os.Bundle
 import android.media.AudioAttributes
 import android.media.SoundPool
-import androidx.compose.material3.Button
+import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 
 
@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        // ----------------------- SOUNDPOOL SETUP -----------------------
         // SoundPool setup
         val audioAttributes = AudioAttributes.Builder()
             .setUsage(AudioAttributes.USAGE_MEDIA)
@@ -45,26 +46,25 @@ class MainActivity : AppCompatActivity() {
 
         setContent {
             MaterialTheme {
-                Surface(modifier = Modifier.fillMaxSize()) {
-                    SoundButton(onClick = {
-                        println("BAHH")
-                        soundPool.play(soundId, 1f, 1f, 0, 3, 1f)
-                        println("BAHH2")
-                    })
+                Column(modifier = Modifier.fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center
+                ) {
+                    Row {
+//                        OutlinedTextField(
+//                            state = rememberTextFieldState(),
+//                            label = { Text("Label") }
+//                        )
+                    }
+                    Row {
+                        SoundButton(onClick = {
+                            soundPool.play(soundId, 1f, 1f, 0, 3, 1f)
+                            println("BAHH")
+                        })
+                    }
                 }
             }
         }
-
-
-
-//        OutlinedTextField(
-//            state = rememberTextFieldState(),
-//            label = { Text("Label") }
-//        )
-
-
-
-
     }
 
     override fun onDestroy() {
