@@ -3,6 +3,7 @@ package com.example.hello_project
 import android.media.AudioAttributes
 import android.media.SoundPool
 import android.os.Bundle
+import android.os.Looper
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Arrangement
@@ -22,18 +23,23 @@ import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-
+import java.util.logging.Handler
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.mutableStateOf
 
 
 class MainActivity : AppCompatActivity() {
     private lateinit var soundPool: SoundPool
     private var soundId: Int = 0
-    val current_soundId_list = mutableListOf<Int>()
+    val current_streamId_list = mutableListOf<Int>()
+    val current_handler_list = mutableListOf<Handler>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,6 +101,7 @@ class MainActivity : AppCompatActivity() {
 
     @Composable
     fun MainUI(soundPool: SoundPool, soundId: Int) {
+        var textBPM by remember { mutableStateOf("") }
         MaterialTheme {
             Column(modifier = Modifier.fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
@@ -102,7 +109,9 @@ class MainActivity : AppCompatActivity() {
             ) {
 
                 OutlinedTextField(
-                    state = rememberTextFieldState(),
+                    value = textBPM,
+                    onValueChange = { textBPM = it },
+//                    state = rememberTextFieldState(),
                     label = { Text("BPM") },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                     modifier = Modifier.fillMaxWidth(),
@@ -115,18 +124,21 @@ class MainActivity : AppCompatActivity() {
 
                 Row {
                     StartSoundButton(onClick = {
-                        var a = soundPool.play(soundId, 1f, 1f, 0, -1, 1f)
-                        current_soundId_list.addLast(a)
+                        val current_BPM = textBPM.toInt()
+                        var handler = android.os.Handler(Looper.getMainLooper())
+                        var streamId = soundPool.play(soundId, 1f, 1f, 0, -1, 1f)
+                        current_streamId_list.addLast(streamId)
                         println("BAHH")
-                        println(a)
+                        println(streamId)
+                        println(current_BPM)
                         println("BWAHH")
                     })
 //                Spacer(modifier = Modifier.height(10.dp))
 
                     StopSoundButton(onClick = {
-                        while(current_soundId_list.size > 0){
-                            soundPool.stop(current_soundId_list[0])
-                            current_soundId_list.removeFirst()
+                        while(current_streamId_list.size > 0){
+                            soundPool.stop(current_streamId_list[0])
+                            current_streamId_list.removeFirst()
                         }
                         println("BAHH2")
                     })
