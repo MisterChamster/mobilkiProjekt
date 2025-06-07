@@ -8,17 +8,25 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.InputTransformation.Companion.keyboardOptions
 import androidx.compose.foundation.text.input.rememberTextFieldState
 import androidx.compose.material3.Button
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 
 
@@ -46,8 +54,8 @@ class MainActivity : AppCompatActivity() {
         soundId = soundPool.load(this, R.raw.snare, 1)
 
         setContent {
-//            var text by remember { mutableStateOf("") }
-            mainUI(soundPool, soundId)
+//            var textBPM = remember { mutableIntStateOf(120) }
+            MainUI(soundPool, soundId)
         }
     }
 
@@ -58,39 +66,69 @@ class MainActivity : AppCompatActivity() {
 }
 
 @Composable
-fun mainUI(soundPool: SoundPool, soundId: Int) {
+fun MainUI(soundPool: SoundPool, soundId: Int) {
     MaterialTheme {
         Column(modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+
+            OutlinedTextField(
+                state = rememberTextFieldState(),
+                label = { Text("BPM") },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                modifier = Modifier.fillMaxWidth(),
+                colors = OutlinedTextFieldDefaults.colors(
+                    disabledTextColor = Color.White,
+                    focusedTextColor = Color.White
+                )
+            )
+
+
             Row {
-//                        OutlinedTextField(
-//                            state = rememberTextFieldState(),
-//                            label = { Text("Label") }
-//                        )
-            }
-            Row {
-                SoundButton(onClick = {
-                    soundPool.play(soundId, 1f, 1f, 0, 3, 1f)
+                StartSoundButton(onClick = {
+                    var a = soundPool.play(soundId, 1f, 1f, 0, 3, 1f)
                     println("BAHH")
+                    println(a)
+                    println("BWAHH")
+                })
+//                Spacer(modifier = Modifier.height(10.dp))
+
+                StopSoundButton(onClick = {
+                    soundPool.stop(soundId)
+                    println("BAHH2")
                 })
             }
+
+
         }
     }
 }
 
 @Composable
-fun SoundButton(onClick: () -> Unit) {
+fun StartSoundButton(onClick: () -> Unit) {
     Column(
         modifier = Modifier
-            .fillMaxSize()
             .padding(24.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Button(onClick = onClick) {
             Text(text = "Play Sound")
+        }
+    }
+}
+
+@Composable
+fun StopSoundButton(onClick: () -> Unit) {
+    Column(
+        modifier = Modifier
+            .padding(24.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Button(onClick = onClick) {
+            Text(text = "Stop Sound")
         }
     }
 }

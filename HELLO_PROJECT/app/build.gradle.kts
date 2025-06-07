@@ -40,7 +40,7 @@ android {
 }
 
 dependencies {
-    implementation("androidx.compose.material:material:1.6.0")
+    implementation("androidx.compose.material:material:1.8.2")
     implementation("androidx.compose.material3:material3:1.4.0-alpha15")
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
