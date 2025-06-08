@@ -30,7 +30,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.foundation.layout.width
 import android.os.Handler
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.material3.DropdownMenuItem
 import kotlin.math.round
@@ -53,7 +52,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         // ----------------------- SOUNDPOOL SETUP -----------------------
-        // SoundPool setup
         val audioAttributes = AudioAttributes.Builder()
             .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
             .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
@@ -64,7 +62,6 @@ class MainActivity : AppCompatActivity() {
             .setAudioAttributes(audioAttributes)
             .build()
 
-        // Load sound from res/raw/sound.mp3
         val loaded_snrhigh = soundPool.load(this, R.raw.snr_low, 1)
         val loaded_snrlow = soundPool.load(this, R.raw.snr_high, 1)
 
@@ -116,7 +113,6 @@ class MainActivity : AppCompatActivity() {
                 value = selectedOptionNumerator.value,
                 onValueChange = {},
                 readOnly = true,
-//                label = { Text("Pick a fruit") },
                 trailingIcon = {
                     ExposedDropdownMenuDefaults.TrailingIcon(expanded)
                 },
@@ -257,7 +253,7 @@ class MainActivity : AppCompatActivity() {
                         println("BAHH")
                         val current_BPM = textBPM.toInt()
                         val customLoopIntervalMs = round(1000.0/(current_BPM/60.0)).toLong()
-                        var handler = Handler(Looper.getMainLooper())
+                        val handler = Handler(Looper.getMainLooper())
                         current_handler_list.addLast(handler)
 
                         val numerator = selectedOptionNumerator.value.toInt()
