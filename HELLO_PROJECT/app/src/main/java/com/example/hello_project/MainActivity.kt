@@ -44,7 +44,7 @@ import androidx.compose.ui.unit.sp
 
 class MainActivity : AppCompatActivity() {
     private lateinit var soundPool: SoundPool
-    private var soundId: Int = 0
+//    private var soundId: Int = 0
 //    val current_streamId_list = mutableListOf<Int>()
     val current_handler_list = mutableListOf<Handler>()
 
@@ -65,11 +65,11 @@ class MainActivity : AppCompatActivity() {
             .build()
 
         // Load sound from res/raw/sound.mp3
-        val loaded_snrlow = soundPool.load(this, R.raw.snr_low, 1)
-        val loaded_snrhigh = soundPool.load(this, R.raw.snr_high, 1)
+        val loaded_snrhigh = soundPool.load(this, R.raw.snr_low, 1)
+        val loaded_snrlow = soundPool.load(this, R.raw.snr_high, 1)
 
         setContent {
-            MainUI(soundPool, loaded_snrlow)
+            MainUI(soundPool, loaded_snrhigh, loaded_snrlow)
         }
     }
 
@@ -194,13 +194,10 @@ class MainActivity : AppCompatActivity() {
 
     @Composable
     fun ToggleSwitch(isToggled: MutableState<Boolean>) {
-
-        Row(verticalAlignment = Alignment.CenterVertically) {
-            Switch(
-                checked = isToggled.value,
-                onCheckedChange = { isToggled.value = it }
-            )
-        }
+        Switch(
+            checked = isToggled.value,
+            onCheckedChange = { isToggled.value = it }
+        )
     }
 
 
@@ -209,11 +206,11 @@ class MainActivity : AppCompatActivity() {
 //  ---------------------------- MAIN UI ----------------------------
 //  -----------------------------------------------------------------
     @Composable
-    fun MainUI(soundPool: SoundPool, soundId: Int) {
+    fun MainUI(soundPool: SoundPool, loaded_snrhigh: Int, loaded_snrlow: Int) {
         var textBPM by remember { mutableStateOf("120") }
         var selectedOptionNumerator = remember { mutableStateOf("4") }
 //        var selectedOptionDenominator = remember { mutableStateOf("4") }
-        var isToggled = remember { mutableStateOf(false) }
+        var isToggled = remember { mutableStateOf(true) }
 
         MaterialTheme {
             Column(modifier = Modifier.fillMaxSize(),
@@ -278,17 +275,27 @@ class MainActivity : AppCompatActivity() {
                             var iter = 1
                             fun playBeat() {
                                 println(iter)
-                                iter += 1
-                                soundPool.play(soundId, 1f, 1f, 1, 0, 1f)
+                                if(iter!=1) {
+                                    soundPool.play(loaded_snrhigh, 1f, 1f, 1, 0, 1f)
+                                    if(iter==4){
+                                        iter = 1
+                                    } else {
+                                        iter += 1
+                                    }
+                                } else {
+                                    soundPool.play(loaded_snrlow, 1f, 1f, 1, 0, 1f)
+                                    iter += 1
+                                }
                                 handler.postDelayed({
                                     playBeat()
                                 }, customLoopIntervalMs)
                             }
                             playBeat()
+                        //wysrane, to już jest zrobione (schowaj kod)
                         } else {
                             println("Hello metronome")
                             fun playMetronome() {
-                                soundPool.play(soundId, 1f, 1f, 1, 0, 1f)
+                                soundPool.play(loaded_snrhigh, 1f, 1f, 1, 0, 1f)
                                 handler.postDelayed({
                                     playMetronome()
                                 }, customLoopIntervalMs)
