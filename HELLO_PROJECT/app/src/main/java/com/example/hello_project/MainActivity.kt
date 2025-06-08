@@ -105,7 +105,7 @@ class MainActivity : AppCompatActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun NumeratorDropdown(selectedOptionNumerator: MutableState<String>) {
-        val options = listOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17")
+        val options = listOf("2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17")
         var expanded by remember { mutableStateOf(false) }
 
         ExposedDropdownMenuBox(
@@ -265,19 +265,19 @@ class MainActivity : AppCompatActivity() {
 //                        val denominator = selectedOptionDenominator.value.toInt()
 
 
-                        println(customLoopIntervalMs)
+//                        println(customLoopIntervalMs)
                         println(numerator)
-                        println(includeBeat)
+//                        println(includeBeat)
 //                        println(denominator)
 
                         if(includeBeat) {
-                            println("Hello beat")
+//                            println("Hello beat")
                             var iter = 1
                             fun playBeat() {
-                                println(iter)
+//                                println(iter)
                                 if(iter!=1) {
                                     soundPool.play(loaded_snrhigh, 1f, 1f, 1, 0, 1f)
-                                    if(iter==4){
+                                    if(iter==numerator){
                                         iter = 1
                                     } else {
                                         iter += 1
@@ -293,7 +293,7 @@ class MainActivity : AppCompatActivity() {
                             playBeat()
                         //wysrane, to już jest zrobione (schowaj kod)
                         } else {
-                            println("Hello metronome")
+//                            println("Hello metronome")
                             fun playMetronome() {
                                 soundPool.play(loaded_snrhigh, 1f, 1f, 1, 0, 1f)
                                 handler.postDelayed({
