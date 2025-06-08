@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
             .setAudioAttributes(audioAttributes)
             .build()
 
-        val loaded_snrhigh = soundPool.load(this, R.raw.snr_low, 1)
+        val loaded_snrhigh = soundPool.load(this, R.raw.hi1, 1)
         val loaded_snrlow = soundPool.load(this, R.raw.snr_high, 1)
         soundPool.play(loaded_snrhigh, 0f, 0f, 1, 0, 1f)
         soundPool.play(loaded_snrlow, 0f, 0f, 1, 0, 1f)
