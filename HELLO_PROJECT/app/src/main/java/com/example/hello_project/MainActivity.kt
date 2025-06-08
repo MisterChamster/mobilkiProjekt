@@ -64,6 +64,8 @@ class MainActivity : AppCompatActivity() {
 
         val loaded_snrhigh = soundPool.load(this, R.raw.snr_low, 1)
         val loaded_snrlow = soundPool.load(this, R.raw.snr_high, 1)
+        soundPool.play(loaded_snrhigh, 0f, 0f, 1, 0, 1f)
+        soundPool.play(loaded_snrlow, 0f, 0f, 1, 0, 1f)
 
         setContent {
             MainUI(soundPool, loaded_snrhigh, loaded_snrlow)
@@ -254,6 +256,7 @@ class MainActivity : AppCompatActivity() {
                         val current_BPM = textBPM.toInt()
                         val customLoopIntervalMs = round(1000.0/(current_BPM/60.0)).toLong()
                         val handler = Handler(Looper.getMainLooper())
+//                        val handlerwholeapp = Handler(Looper.getMainLooper())
                         current_handler_list.addLast(handler)
 
                         val numerator = selectedOptionNumerator.value.toInt()
@@ -264,7 +267,6 @@ class MainActivity : AppCompatActivity() {
 //                        println(customLoopIntervalMs)
                         println(numerator)
 //                        println(includeBeat)
-//                        println(denominator)
 
                         if(includeBeat) {
 //                            println("Hello beat")
