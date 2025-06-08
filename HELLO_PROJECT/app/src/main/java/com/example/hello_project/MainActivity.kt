@@ -62,13 +62,9 @@ class MainActivity : AppCompatActivity() {
             .setAudioAttributes(audioAttributes)
             .build()
 
-        val loaded_snrhigh = soundPool.load(this, R.raw.hi1, 1)
-        val loaded_snrlow = soundPool.load(this, R.raw.snr_high, 1)
-        soundPool.play(loaded_snrhigh, 0f, 0f, 1, 0, 1f)
-        soundPool.play(loaded_snrlow, 0f, 0f, 1, 0, 1f)
 
         setContent {
-            MainUI(soundPool, loaded_snrhigh, loaded_snrlow)
+            MainUI(soundPool)
         }
     }
 
@@ -147,8 +143,9 @@ class MainActivity : AppCompatActivity() {
 
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
-    fun DenominatorDropdown(selectedOptionDenominator: MutableState<String>) {
-        val options = listOf("2", "4", "8", "16", "32")
+    fun InstrumentDropdown(selectedInstrument: MutableState<String>,
+                           onInstrumentSelected: (String) -> Unit) {
+        val options = listOf("Hi-Hat 1", "Hi-Hat 2", "Hi-Hat 3", "Kick 1", "Kick 2", "Kick 3", "Kick 4", "Snare1", "Snare2", "Snare3", "Bruh")
         var expanded by remember { mutableStateOf(false) }
 
         ExposedDropdownMenuBox(
@@ -156,16 +153,15 @@ class MainActivity : AppCompatActivity() {
             onExpandedChange = { expanded = !expanded }
         ) {
             OutlinedTextField(
-                value = selectedOptionDenominator.value,
+                value = selectedInstrument.value,
                 onValueChange = {},
                 readOnly = true,
-//                label = { Text("Pick a fruit") },
                 trailingIcon = {
                     ExposedDropdownMenuDefaults.TrailingIcon(expanded)
                 },
                 modifier = Modifier
                     .menuAnchor()
-                    .width(90.dp),
+                    .width(140.dp),
                 colors = OutlinedTextFieldDefaults.colors(
                     disabledTextColor = Color.White,
                     focusedTextColor = Color.White,
@@ -181,8 +177,9 @@ class MainActivity : AppCompatActivity() {
                     DropdownMenuItem(
                         text = { Text(option) },
                         onClick = {
-                            selectedOptionDenominator.value = option
+                            selectedInstrument.value = option
                             expanded = false
+                            onInstrumentSelected(option)
                         }
                     )
                 }
@@ -204,11 +201,41 @@ class MainActivity : AppCompatActivity() {
 //  ---------------------------- MAIN UI ----------------------------
 //  -----------------------------------------------------------------
     @Composable
-    fun MainUI(soundPool: SoundPool, loaded_snrhigh: Int, loaded_snrlow: Int) {
+    fun MainUI(soundPool: SoundPool) {
         var textBPM by remember { mutableStateOf("120") }
         var selectedOptionNumerator = remember { mutableStateOf("4") }
 //        var selectedOptionDenominator = remember { mutableStateOf("4") }
         var isToggled = remember { mutableStateOf(true) }
+
+        var selectedMetronome = remember { mutableStateOf("Hi-Hat 1") }
+        var selectedBeat = remember { mutableStateOf("Kick 1") }
+
+        var loaded_metronome = soundPool.load(this, R.raw.hi1, 1)
+        var loaded_beat = soundPool.load(this, R.raw.kick1, 1)
+        soundPool.play(loaded_metronome, 0f, 0f, 1, 0, 1f)
+        soundPool.play(loaded_beat, 0f, 0f, 1, 0, 1f)
+
+        fun change_loaded(load_variable: String, instrument: String) {
+            val raw_instrument = when (instrument) {
+                "Hi-Hat 1" -> R.raw.hi1
+                "Hi-Hat 2" -> R.raw.hi2
+                "Hi-Hat 3" -> R.raw.hi3
+                "Kick 1"   -> R.raw.kick1
+                "Kick 2"   -> R.raw.kick2
+                "Kick 3"   -> R.raw.kick3
+                "Kick 4"   -> R.raw.kick4
+                "Snare 1"  -> R.raw.snare1
+                "Snare 2"  -> R.raw.snare2
+                "Snare 3"  -> R.raw.snare3
+                "Bruh"     -> R.raw.bruh1
+                else       -> return
+            }
+            if(load_variable == "metronome") {
+                loaded_metronome = soundPool.load(this, raw_instrument, 1)
+            } else if (load_variable == "beat") {
+                loaded_beat = soundPool.load(this, raw_instrument, 1)
+            }
+        }
 
         MaterialTheme {
             Column(modifier = Modifier.fillMaxSize(),
@@ -250,6 +277,32 @@ class MainActivity : AppCompatActivity() {
 //                    DenominatorDropdown(selectedOptionDenominator)
                 }
 
+                Spacer(modifier = Modifier.height(30.dp))
+
+                Row (
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(text="Metronome instrument:  ", color=Color.White, fontSize = 18.sp)
+                    InstrumentDropdown(selectedMetronome){ instrument ->
+                        println("User selected: $instrument")
+                        change_loaded("metronome", instrument)
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(9.dp))
+
+                Row (
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(text="Beat instrument:  ", color=Color.White, fontSize = 18.sp)
+                    InstrumentDropdown(selectedBeat){ instrument ->
+                        println("User selected: $instrument")
+                        change_loaded("beat", instrument)
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
                 Row {
                     StartSoundButton(onClick = {
                         println("BAHH")
@@ -274,14 +327,14 @@ class MainActivity : AppCompatActivity() {
                             fun playBeat() {
 //                                println(iter)
                                 if(iter!=1) {
-                                    soundPool.play(loaded_snrhigh, 1f, 1f, 1, 0, 1f)
+                                    soundPool.play(loaded_metronome, 1f, 1f, 1, 0, 1f)
                                     if(iter==numerator){
                                         iter = 1
                                     } else {
                                         iter += 1
                                     }
                                 } else {
-                                    soundPool.play(loaded_snrlow, 1f, 1f, 1, 0, 1f)
+                                    soundPool.play(loaded_beat, 1f, 1f, 1, 0, 1f)
                                     iter += 1
                                 }
                                 handler.postDelayed({
@@ -293,7 +346,7 @@ class MainActivity : AppCompatActivity() {
                         } else {
 //                            println("Hello metronome")
                             fun playMetronome() {
-                                soundPool.play(loaded_snrhigh, 1f, 1f, 1, 0, 1f)
+                                soundPool.play(loaded_metronome, 1f, 1f, 1, 0, 1f)
                                 handler.postDelayed({
                                     playMetronome()
                                 }, customLoopIntervalMs)
