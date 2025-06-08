@@ -309,21 +309,16 @@ class MainActivity : AppCompatActivity() {
                         val current_BPM = textBPM.toInt()
                         val customLoopIntervalMs = round(1000.0/(current_BPM/60.0)).toLong()
                         val handler = Handler(Looper.getMainLooper())
-//                        val handlerwholeapp = Handler(Looper.getMainLooper())
                         current_handler_list.addLast(handler)
 
                         val numerator = selectedOptionNumerator.value.toInt()
                         val includeBeat = isToggled.value
-//                        val denominator = selectedOptionDenominator.value.toInt()
 
-
-//                        println(customLoopIntervalMs)
                         println(numerator)
-//                        println(includeBeat)
 
+                        var iter = 1
                         if(includeBeat) {
 //                            println("Hello beat")
-                            var iter = 1
                             fun playBeat() {
 //                                println(iter)
                                 if(iter!=1) {
