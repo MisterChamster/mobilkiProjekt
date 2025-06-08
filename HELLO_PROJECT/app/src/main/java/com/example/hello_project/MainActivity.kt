@@ -273,17 +273,31 @@ class MainActivity : AppCompatActivity() {
                         println(includeBeat)
 //                        println(denominator)
 
-                        fun playLoopedSound() {
-                            println("Helo fgtt")
-                            soundPool.play(soundId, 1f, 1f, 1, 0, 1f)
-                            handler.postDelayed({
-                                playLoopedSound()
-                            }, customLoopIntervalMs)
+                        if(includeBeat) {
+                            println("Hello beat")
+                            var iter = 1
+                            fun playBeat() {
+                                println(iter)
+                                iter += 1
+                                soundPool.play(soundId, 1f, 1f, 1, 0, 1f)
+                                handler.postDelayed({
+                                    playBeat()
+                                }, customLoopIntervalMs)
+                            }
+                            playBeat()
+                        } else {
+                            println("Hello metronome")
+                            fun playMetronome() {
+                                soundPool.play(soundId, 1f, 1f, 1, 0, 1f)
+                                handler.postDelayed({
+                                    playMetronome()
+                                }, customLoopIntervalMs)
+                            }
+                            playMetronome()
                         }
-                        playLoopedSound()
+
                         println("BWAHH")
                     })
-//                Spacer(modifier = Modifier.height(10.dp))
 
                     StopSoundButton(onClick = {
                         while(current_handler_list.size > 0){
